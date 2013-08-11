@@ -28,6 +28,7 @@ class apache (
   $serveradmin          = 'root@localhost',
   $sendfile             = false,
   $error_documents      = false,
+  $httpd_dir            = $apache::params::httpd_dir,
   $confd_dir            = $apache::params::confd_dir,
   $vhost_dir            = $apache::params::vhost_dir,
   $vhost_enable_dir     = $apache::params::vhost_enable_dir,
@@ -38,6 +39,7 @@ class apache (
   $servername           = $apache::params::servername,
   $user                 = $apache::params::user,
   $group                = $apache::params::group,
+  $keepalive            = $apache::params::keepalive,
 ) inherits apache::params {
 
   package { 'httpd':
@@ -53,7 +55,6 @@ class apache (
     validate_re($mpm_module, '(prefork|worker)')
   }
 
-  $httpd_dir  = $apache::params::httpd_dir
   $ports_file = $apache::params::ports_file
   $logroot    = $apache::params::logroot
 
@@ -165,10 +166,11 @@ class apache (
   }
 
   concat { $ports_file:
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    notify => Service['httpd'],
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    notify  => Service['httpd'],
+    require => Package['httpd'],
   }
   concat::fragment { 'Apache ports header':
     target  => $ports_file,

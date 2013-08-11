@@ -1,9 +1,15 @@
 class custom_apache_php {
-  include apache
+  include stdlib
+  #include apache
+  class { 'apache':
+    mpm_module => 'prefork',
+  }
+  
+
   class {'apache::mod::php':
     require => Package["php5"]
   }
-  apache::loadmodule{'rewrite':}
+  #apache::loadmodule{'rewrite':}
   package { php5:
     ensure => installed,
   }
