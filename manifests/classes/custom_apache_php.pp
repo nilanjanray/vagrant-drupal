@@ -5,11 +5,12 @@ class custom_apache_php {
     mpm_module => 'prefork',
   }
   
+  include apache::mod::rewrite
 
   class {'apache::mod::php':
     require => Package["php5"]
   }
-  #apache::loadmodule{'rewrite':}
+  
   package { php5:
     ensure => installed,
   }
@@ -22,6 +23,4 @@ class custom_apache_php {
     ensure => installed,
     require => Package["php5"]
   }
-
-
 }
