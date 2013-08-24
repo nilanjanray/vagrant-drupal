@@ -18,6 +18,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, :inline => "/usr/bin/apt-get update"
   config.vm.provision :shell, :inline => "/usr/bin/apt-get install -y puppet libaugeas-ruby augeas-tools rubygems"
   #config.vm.forward_port 80, 8080
+  #config.vm.network :public_network, :public_network => "eth0"
+  config.vm.network :private_network, :ip => "192.168.56.14"
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "manifests"
     puppet.module_path = "modules"
