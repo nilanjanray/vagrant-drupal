@@ -40,9 +40,7 @@ class custom_apache_php {
 
 
   $docroot = '/srv/www/drupal/web'
-  $error_log_file = '/srv/www/drupal/log/drupal_error.log'
   $scriptalias          = '/usr/lib/cgi-bin'
-  $access_log_file      = '/srv/www/drupal/access-log/access_drual.log'
 
   apache::vhost { 'drupal':
     port => 8081,
