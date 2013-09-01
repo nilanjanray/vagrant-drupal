@@ -11,14 +11,14 @@ class custom_apache_php {
   # apache::listen { '8081': }  
 
   $dir = 'app/drupalroot/web'
-  #$drupaldir = 'www'
+  $project_dir = 'www'
 
   exec { 'mkdir_cert_dir':
     command => "mkdir -p /opt/${dir}",
     unless  => "test -d /opt/${dir}",
   }
 
-  file { "/srv/www":
+  file { "/srv/${project_dir}":
     ensure => "directory",
   }
 
@@ -28,21 +28,15 @@ class custom_apache_php {
     target => '/opt/app/drupalroot',
   }
   
-  # create log directory.
-  file { "/srv/www/drupal/log":
-    ensure => "directory",
-  }
-
-  # create error log.
-  file { "/srv/www/drupal/log/drupal_error.log":
-    ensure => "present",
-  }
-
-
+  # Setup apache virtual host.
+  
   $docroot = '/srv/www/drupal/web'
-  $scriptalias          = '/usr/lib/cgi-bin'
+  $scriptalias = '/usr/lib/cgi-bin'
 
   apache::vhost { 'drupal':
+    serveraliases => [
+    'dev.drupal-mind.org',
+    ],
     port => 8081,
     docroot => $docroot,
     scriptalias => $scriptalias,
@@ -50,27 +44,9 @@ class custom_apache_php {
     override => "All",
     error_log => true,
     access_log => true,
-    #error_log_file => $error_log_file,
-    #access_log_file => $access_log_file,
     #priority => '15',
   }
 
+  include php_fix
 
-
-  class {'apache::mod::php':
-    require => Package["php5"]
-  }
-  
-  package { php5:
-    ensure => installed,
-  }
-	
-  package { php5-cli:
-    ensure => installed,
-    require => Package["php5"]
-  }
-  package { php5-common:
-    ensure => installed,
-    require => Package["php5"]
-  }
 }
