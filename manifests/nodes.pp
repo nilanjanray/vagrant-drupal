@@ -3,4 +3,5 @@ node 'vagrant.local' {
   include curl
   include mysql_fix
   include drupal
+  include git_fix
 }
