@@ -33,6 +33,7 @@ class drupal {
   drush::exec { 'drush-drupal-download':
     command        => 'dl --drupal-project-rename=drop1 drupal --destination=/srv/www/drupal/web',
     #root_directory => '/srv/www/drupal',
+    require => Apache::Vhost['drupal'],
   }
   
   #Change Owner ship to apache
@@ -40,6 +41,7 @@ class drupal {
     ensure => directory,
     group => "www-data",
     owner => "www-data",
-    recurse => true,     
+    recurse => true,
+    require => Drush::Exec['drush-drupal-download'],     
   }
 }
